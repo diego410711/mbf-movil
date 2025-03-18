@@ -37,3 +37,9 @@ export const fetchPDFServices = async (id: string): Promise<string> => {
     throw new Error("Unable to fetch PDF");
   }
 };
+
+
+export const updateEquipment = async (_id: string, data: Record<string, any>) => {
+  return axios.put(`${API_URL}/${_id}`, data);
+};
+

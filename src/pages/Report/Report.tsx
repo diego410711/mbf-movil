@@ -19,10 +19,12 @@ import {
   IonText,
   IonTextarea,
   IonInput,
+  useIonToast,
 } from "@ionic/react";
 import {
   fetchPDFServices,
   getEquipment,
+  updateEquipment,
 } from "../../services/equipmentService";
 import "./Report.css";
 import { Filesystem, Directory } from "@capacitor/filesystem";
@@ -51,6 +53,7 @@ export default function Report(props: { role: string }) {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [editingEquipment, setEditingEquipment] = useState<{ [key: string]: string }>({});
   const [isEditing, setIsEditing] = useState<Record<string, boolean>>({});
+  const [presentToast] = useIonToast();
 
   useEffect(() => {
     setIsEditing(prevState => ({
@@ -182,11 +185,14 @@ export default function Report(props: { role: string }) {
         });
         return updated;
       });
-
-      toast({ message: "Equipo actualizado con éxito", duration: 2000, color: "success" });
+      presentToast({
+        message: "Equipo actualizado con éxito.",
+        duration: 2000,
+        color: "success",
+      });
     } catch (error) {
       console.error("Error al guardar:", error);
-      toast({ message: "Error al actualizar equipo", duration: 2000, color: "danger" });
+      presentToast({ message: "Error al actualizar equipo", duration: 2000, color: "danger" });
     }
   };
 
