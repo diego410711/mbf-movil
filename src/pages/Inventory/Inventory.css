@@ -1,0 +1,17 @@
+.custom-date,
+.custom-select {
+    margin-top: 31px;
+    --highlight-color: #22baab
+}
+
+[aria-checked=true].sc-ion-alert-md .alert-radio-icon.sc-ion-alert-md {
+    border-color: #22baab;
+}
+
+.alert-radio-inner.sc-ion-alert-md {
+    background-color: #22baab;
+}
+
+.alert-button.sc-ion-alert-md {
+    color: #22baab;
+}

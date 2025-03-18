@@ -1,0 +1,94 @@
+.custom-input {
+    --background: #ffffff;
+    /* Color de fondo blanco */
+    --color: #000000;
+    /* Color del texto negro */
+    margin-top: 37px;
+    --border-radius: 16px;
+}
+
+.custom-input input {
+    padding: 15px !important;
+}
+
+.custom-button {
+    margin-bottom: 24px !important;
+    --border-radius: 16px;
+    text-transform: capitalize;
+    width: 90%;
+    height: 50px;
+}
+
+.container-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.centered-link {
+    display: flex;
+    justify-content: center;
+    /* Centra el contenido horizontalmente */
+    text-align: center;
+    /* Asegura que el texto esté centrado */
+    margin: 20px 0;
+    /* Espacio adicional (opcional) */
+}
+
+.centered-link a {
+    color: var(--ion-color-secondary);
+    /* Cambia el color del enlace */
+    text-decoration: none;
+    /* Elimina el subrayado */
+    font-weight: bold;
+    /* Cambia el peso de la fuente */
+}
+
+.centered-link a:hover {
+    text-decoration: underline;
+    /* Subrayado al pasar el ratón */
+}
+
+.custom-label-login {
+    text-align: center;
+}
+
+.input-wrapper.sc-ion-input-md {
+    border-radius: 16px;
+}
+
+.custom-icon {
+    color: white;
+    /* Cambia el color aquí */
+    font-size: 41px;
+
+}
+
+.flex-icons {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 40%;
+    margin: 0 auto;
+    margin-top: 20px;
+}
+
+.custom-img {
+    max-width: 300px;
+    height: auto;
+    width: 70%;
+    margin: 0 auto;
+    margin-bottom: -22px;
+}
+
+
+.custom-item {
+    --background: transparent;
+    --border-color: transparent;
+}
+
+.custom-captcha {
+    display: flex;
+    justify-content: center;
+}

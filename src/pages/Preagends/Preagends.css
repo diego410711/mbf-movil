@@ -1,0 +1,9 @@
+.custom-hr {
+    margin: 16px 0;
+    border-color: #ddd;
+    border: 1px solid;
+}
+
+.custom-label-bold {
+    font-weight: bold;
+}

@@ -1,0 +1,7 @@
+{
+  "name": "INGE APP",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}

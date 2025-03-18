@@ -1,0 +1,9 @@
+.custom-list {
+    background: black;
+}
+
+.custom-input-search {
+    --background: white;
+    --color: #000000;
+    --border-radius: 16px;
+}

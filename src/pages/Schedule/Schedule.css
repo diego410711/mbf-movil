@@ -1,0 +1,169 @@
+.calendar-controls {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    align-items: center;
+}
+
+.calendar-header {
+    font-weight: bold;
+    text-align: center;
+    border-bottom: 1px solid #ccc;
+}
+
+.calendar-day {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    cursor: pointer;
+    align-items: center;
+}
+
+.calendar-row:last-child {
+    border-bottom: none;
+}
+
+.calendar-day-outside {
+    color: #bbb;
+}
+
+.calendar-row {
+    border-bottom: 1px solid #ccc;
+    height: 50px;
+}
+
+.calendar-event {
+    background-color: #4caf50;
+    color: white;
+    border-radius: 5px;
+    padding: 2px 5px;
+    margin-top: 2px;
+    font-size: 0.7rem;
+    text-align: center;
+}
+
+.calendar-event.meeting {
+    background-color: #007bff;
+    color: white;
+    padding: 2px 5px;
+    margin-top: 5px;
+    border-radius: 3px;
+}
+
+.calendar-event.deadline {
+    background-color: #e74c3c;
+    color: white;
+    padding: 2px 5px;
+    margin-top: 5px;
+    border-radius: 3px;
+}
+
+.calendar-event.holiday {
+    background-color: #2ecc71;
+    color: white;
+    padding: 2px 5px;
+    margin-top: 5px;
+    border-radius: 3px;
+}
+
+.event-bars {
+    display: flex;
+    margin-top: 5px;
+    gap: 2px;
+}
+
+.event-bar {
+    height: 5px;
+    width: 100%;
+    border-radius: 3px;
+}
+
+.event-bar.DIagnostico {
+    background-color: blue;
+}
+
+.event-bar.Visita {
+    background-color: green;
+}
+
+.event-bar.Mantenimiento {
+    background-color: red;
+}
+
+.event-bar.Reparacion {
+    background-color: orange;
+}
+
+.event-bar.Calibracion {
+    background-color: rgb(151, 170, 196);
+}
+
+.event-bar.Garantia {
+    background-color: rgb(233, 85, 189);
+}
+
+.selected-day {
+    border-radius: 50%;
+    /* Círculo */
+    background-color: #22baab;
+    height: 30px;
+    width: 30px;
+    /* Fondo blanco */
+    color: black;
+    /* Texto negro para contraste */
+    font-weight: bold;
+    /* Sombra para destacar */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.selected-day span {
+    font-weight: bold;
+    /* Resalta el número */
+}
+
+/* Schedule.css */
+
+/* Contenedor del calendario con animación */
+.calendar-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
+}
+
+.calendar-container.left {
+    animation: slide-left 0.3s forwards;
+}
+
+.calendar-container.right {
+    animation: slide-right 0.3s forwards;
+}
+
+.custom-input input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: invert(50%) sepia(100%) saturate(100%) hue-rotate(180deg) brightness(80%) contrast(100%);
+}
+
+/* Animación para deslizar a la izquierda */
+@keyframes slide-left {
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(0%);
+    }
+}
+
+/* Animación para deslizar a la derecha */
+@keyframes slide-right {
+    from {
+        transform: translateX(-100%);
+    }
+
+    to {
+        transform: translateX(0%);
+    }
+}

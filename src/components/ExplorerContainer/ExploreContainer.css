@@ -1,0 +1,52 @@
+#container p {
+  font-size: 14px;
+  line-height: 22px;
+  color: #8c8c8c;
+  margin: 0;
+}
+
+#container a {
+  text-decoration: none;
+}
+
+.profile-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.image-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.custom-image {
+  width: 61px;
+  height: 61px;
+  border-radius: 50%;
+  object-fit: cover;
+  padding: 13px;
+  background: white;
+  /* border: 3px solid aliceblue; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 27px;
+}
+
+.custom-icon-explore {
+  color: black;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  margin-top: 20px;
+  width: 100%;
+}
+
+.text-center {
+  --text-align: center;
+  text-align: center;
+
+}
