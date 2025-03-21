@@ -209,6 +209,10 @@ export default function Report(props: { role: string }) {
   };
 
 
+  function handleAddPhoto(_id: string): void {
+    throw new Error("Function not implemented.");
+  }
+
   return (
     <IonPage>
       <IonHeader>
@@ -332,9 +336,24 @@ export default function Report(props: { role: string }) {
                           </>
                         ) : (
                           <>
-                            {!isEditing[equipment._id] ? <strong className="ion-hide-sm-up">{field.label}: </strong> : <IonLabel position="floating" className="custom-label">{field.label}: </IonLabel>}
-                            <IonLabel>No disponible</IonLabel>
+                            {!isEditing[equipment._id] && (!editingEquipment?.photos || editingEquipment.photos.length === 0) ? (
+                              <strong className="ion-hide-sm-up">{field.label}: </strong>
+                            ) : (
+                              <IonLabel position="floating" className="custom-label">{field.label}: </IonLabel>
+                            )}
+
+                            {!editingEquipment?.photos || editingEquipment.photos.length === 0 ? (
+                              isEditing[equipment._id] ? ( // Solo mostrar cuando está en edición
+                                <>
+                                  <IonButton onClick={() => handleAddPhoto(equipment._id)}>Agregar foto</IonButton>
+                                </>
+                              ) : (
+                                <IonLabel>No disponible</IonLabel>
+                              )
+                            ) : null}
                           </>
+
+
                         )
                       ) : field.label === "Factura" ? (
                         <>
