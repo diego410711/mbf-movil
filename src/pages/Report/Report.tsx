@@ -315,7 +315,7 @@ export default function Report(props: { role: string }) {
                       {field.label === "Foto" ? (
                         Array.isArray(field.value) && field.value.length > 0 ? (
                           <>
-                            {!isEditing[equipment._id] ? <strong className="ion-hide-sm-up">{field.label}</strong> : <IonLabel position="floating" className="custom-label">{field.label}</IonLabel>}:
+                            {!isEditing[equipment._id] ? <strong className="ion-hide-sm-up">{field.label}</strong> : <IonLabel position="floating" className="custom-label">{field.label} :</IonLabel>}
                             <div>
                               {field.value.map((photoUrl, index) => (
                                 <img
