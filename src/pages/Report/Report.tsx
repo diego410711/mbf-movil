@@ -54,6 +54,8 @@ export default function Report(props: { role: string }) {
   const [editingEquipment, setEditingEquipment] = useState<{ [key: string]: string }>({});
   const [isEditing, setIsEditing] = useState<Record<string, boolean>>({});
   const [presentToast] = useIonToast();
+  const [selectedPhotos, setSelectedPhotos] = useState<{ [key: string]: File[] }>({});
+
 
   useEffect(() => {
     setIsEditing(prevState => ({
@@ -154,29 +156,45 @@ export default function Report(props: { role: string }) {
     setIsModalOpen(true);
   };
 
+  useEffect(() => {
+    console.log("Lista de equipos actualizada:", equipmentList);
+  }, [equipmentList]);
+
   // Guardar cambios en el equipo editado
   const handleSave = async (_id: string): Promise<void> => {
     try {
-      // Obtener los datos editados
-      const updatedData: Partial<Equipment> = {};
+      const updatedData = new FormData();
+
+      // Agregar campos de texto editados
       Object.keys(editingEquipment).forEach((key) => {
         if (key.startsWith(_id)) {
           const field = key.split("-")[1]; // Extraer el nombre del campo
-          updatedData[field as keyof Equipment] = editingEquipment[key];
+          updatedData.append(field, editingEquipment[key]); // Agregar al FormData
         }
       });
 
-      // Enviar actualización al backend
-      await updateEquipment(_id, updatedData);
+      // Agregar imágenes al FormData si existen
+      if (selectedPhotos[_id]) {
+        selectedPhotos[_id].forEach((photo, index) => {
+          updatedData.append(`photo_${index}`, photo);
+        });
+      }
 
-      // Actualizar la lista con los nuevos valores
+      // Enviar datos al backend
+      const updatedEquipment = await updateEquipment(_id, updatedData);
+
+      // Actualizar la lista de equipos con las nuevas fotos sin recargar todo
       setEquipmentList((prevList) =>
         prevList.map((equipment) =>
-          equipment._id === _id ? { ...equipment, ...updatedData } : equipment
+          equipment._id === _id ? { ...equipment, photos: updatedEquipment.data.photos } : equipment
         )
       );
 
-      // Restablecer estado de edición
+
+
+
+
+      // Restablecer estados
       setIsEditing((prev) => ({ ...prev, [_id]: false }));
       setEditingEquipment((prev) => {
         const updated = { ...prev };
@@ -185,6 +203,13 @@ export default function Report(props: { role: string }) {
         });
         return updated;
       });
+
+      setSelectedPhotos((prev) => {
+        const updated = { ...prev };
+        delete updated[_id];
+        return updated;
+      });
+
       presentToast({
         message: "Equipo actualizado con éxito.",
         duration: 2000,
@@ -192,9 +217,15 @@ export default function Report(props: { role: string }) {
       });
     } catch (error) {
       console.error("Error al guardar:", error);
-      presentToast({ message: "Error al actualizar equipo", duration: 2000, color: "danger" });
+      presentToast({
+        message: "Error al actualizar equipo",
+        duration: 2000,
+        color: "danger",
+      });
     }
   };
+
+
 
   // Cancelar edición y restaurar valores originales
   const handleCancel = (_id: string): void => {
@@ -209,9 +240,14 @@ export default function Report(props: { role: string }) {
   };
 
 
-  function handleAddPhoto(_id: string): void {
-    throw new Error("Function not implemented.");
-  }
+  const handleAddPhoto = (id: string, event: any) => {
+    const files = Array.from(event.target.files) as File[];
+    setSelectedPhotos((prev) => ({
+      ...prev,
+      [id]: files, // Guardamos las imágenes seleccionadas por equipo
+    }));
+  };
+
 
   return (
     <IonPage>
@@ -345,12 +381,18 @@ export default function Report(props: { role: string }) {
                             {!editingEquipment?.photos || editingEquipment.photos.length === 0 ? (
                               isEditing[equipment._id] ? ( // Solo mostrar cuando está en edición
                                 <>
-                                  <IonButton onClick={() => handleAddPhoto(equipment._id)}>Agregar foto</IonButton>
+                                  <input
+                                    type="file"
+                                    accept="image/*"
+                                    multiple
+                                    onChange={(event) => handleAddPhoto(equipment._id, event)}
+                                  />
                                 </>
                               ) : (
                                 <IonLabel>No disponible</IonLabel>
                               )
                             ) : null}
+
                           </>
 
 
