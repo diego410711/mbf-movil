@@ -256,7 +256,7 @@ export default function Report(props: { role: string }) {
           <IonButtons slot="start">
             <IonMenuButton />
           </IonButtons>
-          <IonTitle>Informe</IonTitle>
+          <IonTitle>Servicios técnicos solicitados</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
