@@ -120,11 +120,6 @@ export default function ExploreContainer(props: { role: string }) {
             },
             { name: "Inventario", icon: receiptOutline, route: "/inventory" },
             {
-              name: "Solicitar servicio técnico",
-              icon: buildOutline,
-              route: "/technicalservice",
-            },
-            {
               name: "Servicios técnicos solicitados",
               icon: clipboardOutline,
               route: "/report",
