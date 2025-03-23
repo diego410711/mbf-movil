@@ -183,16 +183,14 @@ export default function Report(props: { role: string }) {
       // Enviar datos al backend
       const updatedEquipment = await updateEquipment(_id, updatedData);
 
-      // Actualizar la lista de equipos con las nuevas fotos sin recargar todo
+      // Actualizar la lista de equipos reflejando todos los cambios
       setEquipmentList((prevList) =>
         prevList.map((equipment) =>
-          equipment._id === _id ? { ...equipment, photos: updatedEquipment.data.photos } : equipment
+          equipment._id === _id
+            ? { ...equipment, ...updatedEquipment.data } // Aplicar todos los cambios
+            : equipment
         )
       );
-
-
-
-
 
       // Restablecer estados
       setIsEditing((prev) => ({ ...prev, [_id]: false }));
@@ -224,6 +222,7 @@ export default function Report(props: { role: string }) {
       });
     }
   };
+
 
 
 
