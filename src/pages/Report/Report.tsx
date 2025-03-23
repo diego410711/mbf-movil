@@ -248,6 +248,47 @@ export default function Report(props: { role: string }) {
   };
 
 
+  const handleRemovePhoto = async (equipmentId: string, photoIndex: number) => {
+    try {
+      // Obtener la URL de la foto a eliminar
+      const photoToRemove = Array.isArray(equipmentList.find(e => e._id === equipmentId)?.photos)
+        ? equipmentList.find(e => e._id === equipmentId)?.photos![photoIndex]
+        : undefined;
+
+      if (!photoToRemove) return;
+
+      // Llamada al backend para eliminar la foto de la base de datos
+      await deletePhotoFromEquipment(equipmentId, photoToRemove);
+
+      // Actualizar estado eliminando la foto en el frontend
+      setEquipmentList((prevList) =>
+        prevList.map((equipment) => {
+          if (equipment._id === equipmentId) {
+            return {
+              ...equipment,
+              photos: (Array.isArray(equipment.photos) ? equipment.photos : [equipment.photos])
+                .filter((_, index) => index !== photoIndex) as string[], // Eliminar del array
+            };
+          }
+          return equipment;
+        })
+      );
+
+      presentToast({
+        message: "Foto eliminada con éxito.",
+        duration: 2000,
+        color: "success",
+      });
+    } catch (error) {
+      console.error("Error al eliminar la foto:", error);
+      presentToast({
+        message: "Error al eliminar la foto.",
+        duration: 2000,
+        color: "danger",
+      });
+    }
+  };
+
   return (
     <IonPage>
       <IonHeader>
