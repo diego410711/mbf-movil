@@ -353,19 +353,41 @@ export default function Report(props: { role: string }) {
                             {!isEditing[equipment._id] ? <strong className="ion-hide-sm-up">{field.label}</strong> : <IonLabel position="floating" className="custom-label">{field.label} :</IonLabel>}
                             <div>
                               {field.value.map((photoUrl, index) => (
-                                <img
-                                  key={index}
-                                  src={`data:image/png;base64,${photoUrl}`}
-                                  alt={`Foto de ${equipment.name} ${index + 1}`}
-                                  style={{
-                                    width: "50px",
-                                    height: "50px",
-                                    objectFit: "cover",
-                                    borderRadius: "4px",
-                                    margin: "5px",
-                                  }}
-                                  onClick={() => handleImageClick(photoUrl)}
-                                />
+                                <div key={index} style={{ position: "relative", display: "inline-block" }}>
+                                  {isEditing[equipment._id] && (
+                                    <button
+                                      style={{
+                                        position: "absolute",
+                                        top: "-5px",
+                                        right: "-5px",
+                                        background: "red",
+                                        color: "white",
+                                        border: "none",
+                                        borderRadius: "50%",
+                                        width: "20px",
+                                        height: "20px",
+                                        fontSize: "14px",
+                                        cursor: "pointer",
+                                        zIndex: 2,
+                                      }}
+                                      onClick={() => handleRemovePhoto(equipment._id, index)}
+                                    >
+                                      ✖
+                                    </button>
+                                  )}
+                                  <img
+                                    src={`data:image/png;base64,${photoUrl}`}
+                                    alt={`Foto de ${equipment.name} ${index + 1}`}
+                                    style={{
+                                      width: "50px",
+                                      height: "50px",
+                                      objectFit: "cover",
+                                      borderRadius: "4px",
+                                      margin: "5px",
+                                    }}
+                                    onClick={() => handleImageClick(photoUrl)}
+                                  />
+                                </div>
                               ))}
                             </div>
                           </>
