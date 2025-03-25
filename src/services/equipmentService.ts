@@ -2,44 +2,61 @@ import axios from "axios";
 
 export const API_URL = `${import.meta.env.VITE_API_URL_TEST}/equipment`;
 
+// Obtener la lista de equipos
 export const getEquipment = async () => {
   try {
     const response = await axios.get(API_URL);
-    return response.data; // La respuesta debe ser un arreglo de equipos
+    return response.data;
   } catch (error) {
     console.error("Error al obtener los equipos:", error);
     throw error;
   }
 };
 
-// Función para enviar los datos del formulario
+// Enviar datos del formulario para solicitar un servicio técnico
 export const submitTechnicalServiceRequest = async (formData: FormData) => {
   try {
-    const response = await axios.post(`${API_URL}`, formData, {
+    const response = await axios.post(API_URL, formData, {
       headers: {
-        "Content-Type": "multipart/form-data", // Indica que se están enviando archivos
+        "Content-Type": "multipart/form-data",
       },
     });
-    return response.data; // Devuelve la respuesta del backend
+    return response.data;
   } catch (error) {
-    console.error("Error while sending the request:", error);
-    throw error; // Propaga el error para manejarlo en el componente
+    console.error("Error al enviar la solicitud:", error);
+    throw error;
   }
 };
 
-// Función para obtener el PDF en formato Base64
+// Obtener el PDF en formato Base64
 export const fetchPDFServices = async (id: string): Promise<string> => {
   try {
     const response = await axios.get(`${API_URL}/generate-pdf/${id}`);
-    return response.data.base64; // Devuelve el Base64 del PDF
+    return response.data.base64;
   } catch (error) {
-    console.error("Error fetching PDF:", error);
-    throw new Error("Unable to fetch PDF");
+    console.error("Error al obtener el PDF:", error);
+    throw new Error("No se pudo obtener el PDF");
   }
 };
 
-
+// Actualizar equipo
 export const updateEquipment = async (_id: string, data: Record<string, any>) => {
-  return axios.put(`${API_URL}/${_id}`, data);
+  try {
+    const response = await axios.put(`${API_URL}/${_id}`, data);
+    return response.data;
+  } catch (error) {
+    console.error("Error al actualizar el equipo:", error);
+    throw error;
+  }
 };
 
+// Eliminar una foto de un equipo
+export const deletePhotoFromEquipment = async (equipmentId: string, photoUrl: string) => {
+  try {
+    const response = await axios.patch(`${API_URL}/${equipmentId}/photo`, { photoUrl });
+    return response.data;
+  } catch (error) {
+    console.error("Error al eliminar la foto:", error);
+    throw error;
+  }
+};

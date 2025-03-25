@@ -22,6 +22,7 @@ import {
   useIonToast,
 } from "@ionic/react";
 import {
+  deletePhotoFromEquipment,
   fetchPDFServices,
   getEquipment,
   updateEquipment,
