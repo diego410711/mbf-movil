@@ -169,8 +169,8 @@ export default function Report(props: { role: string }) {
       // Agregar campos de texto editados
       Object.keys(editingEquipment).forEach((key) => {
         if (key.startsWith(_id)) {
-          const field = key.split("-")[1]; // Extraer el nombre del campo
-          updatedData.append(field, editingEquipment[key]); // Agregar al FormData
+          const field = key.split("-")[1];
+          updatedData.append(field, editingEquipment[key]);
         }
       });
 
@@ -182,18 +182,13 @@ export default function Report(props: { role: string }) {
       }
 
       // Enviar datos al backend
-      const updatedEquipment = await updateEquipment(_id, updatedData);
+      await updateEquipment(_id, updatedData);
 
-      // Actualizar la lista de equipos reflejando todos los cambios
-      setEquipmentList((prevList) =>
-        prevList.map((equipment) =>
-          equipment._id === _id
-            ? { ...equipment, ...updatedEquipment.data } // Aplicar todos los cambios
-            : equipment
-        )
-      );
+      // **Recargar la lista de equipos después de guardar**
+      const updatedList = await getEquipment();
+      setEquipmentList(updatedList);
 
-      // Restablecer estados
+      // Limpiar estados de edición
       setIsEditing((prev) => ({ ...prev, [_id]: false }));
       setEditingEquipment((prev) => {
         const updated = { ...prev };
@@ -223,6 +218,8 @@ export default function Report(props: { role: string }) {
       });
     }
   };
+
+
 
 
 
