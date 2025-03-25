@@ -428,6 +428,12 @@ export default function Report(props: { role: string }) {
                                   />
                                 </div>
                               ))}
+                              {isEditing[equipment._id] && <input
+                                type="file"
+                                accept="image/*"
+                                multiple
+                                onChange={(event) => handleAddPhoto(equipment._id, event)}
+                              />}
                             </div>
                           </>
                         ) : (
