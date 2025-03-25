@@ -17,7 +17,7 @@ import {
 } from "@ionic/react";
 import "./Register.css";
 import { Link, useHistory } from "react-router-dom";
-import { logoGoogle, logoFacebook } from "ionicons/icons";
+import { logoGoogle, logoFacebook, eyeOffOutline, eyeOutline } from "ionicons/icons";
 import validateEmail from "../../utils/validateEmail";
 import { register } from "../../services/authService";
 import ReCAPTCHA from "react-google-recaptcha";
@@ -40,7 +40,8 @@ export default function Register(props: {
   const [isLoading, setIsLoading] = useState(false);
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
-
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPass, setShowConfirmPass] = useState(false);
   const history = useHistory();
 
   const handleRegister = async () => {
@@ -170,19 +171,28 @@ export default function Register(props: {
                   </IonItem>
                 </IonRadioGroup>
               ) : (
-                <IonInput
-                  type={
-                    index === 3
-                      ? "number"
-                      : index === 8 || index === 9
-                      ? "password"
-                      : "text"
-                  }
-                  value={item.value}
-                  onIonInput={(e) => item.set(e.detail.value!)}
-                  className="custom-input"
-                  placeholder={item.text}
-                />
+                <>
+                  <IonInput
+                    type={
+                      index === 3
+                        ? "number"
+                        : index === 8
+                          ? showPassword ? "text" : "password"
+                          : index === 9
+                            ? showConfirmPass ? "text" : "password"
+                            : "text"
+                    }
+                    value={item.value}
+                    onIonInput={(e) => item.set(e.detail.value!)}
+                    className="custom-input"
+                    placeholder={item.text}
+                  />
+                  {(index === 8 || index === 9) && (
+                    <IonButton fill="clear" onClick={() => index === 8 ? setShowPassword(!showPassword) : setShowConfirmPass(!showConfirmPass)}>
+                      <IonIcon icon={index === 8 ? (showPassword ? eyeOffOutline : eyeOutline) : (showConfirmPass ? eyeOffOutline : eyeOutline)} />
+                    </IonButton>
+                  )}
+                </>
               )}
             </IonItem>
           );
