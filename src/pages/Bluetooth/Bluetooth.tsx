@@ -53,7 +53,7 @@ const Bluetooth: React.FC = () => {
           {/* Peso Actual */}
           <IonRow className="ion-text-center">
             <IonCol>
-              <h1 style={{ fontSize: "4rem", color: "red" }}>{weight}</h1>
+              <h1 className="title-kg">{weight}</h1>
               <h2>kg</h2>
             </IonCol>
           </IonRow>
@@ -64,7 +64,7 @@ const Bluetooth: React.FC = () => {
               <IonLabel>Auto mode</IonLabel>
             </IonCol>
             <IonCol className="ion-text-end">
-              <IonLabel style={{ color: "green" }}>Connected</IonLabel>
+              <IonLabel className="color-label">Connected</IonLabel>
             </IonCol>
           </IonRow>
 

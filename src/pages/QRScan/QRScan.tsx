@@ -10,6 +10,7 @@ import {
   IonMenuButton,
 } from "@ionic/react";
 import QrScanner from "react-qr-scanner";
+import "./QRScan.css";
 
 const QRScan: React.FC = () => {
   const [scanResult, setScanResult] = useState<string | null>(null);
@@ -125,7 +126,7 @@ const QRScan: React.FC = () => {
           ) : (
             <div>
               <h2>Apunta al código QR</h2>
-              {error && <p style={{ color: "red" }}>{error}</p>}
+              {error && <p className="color-error">{error}</p>}
               <QrScanner
                 delay={300}
                 onError={handleError}
