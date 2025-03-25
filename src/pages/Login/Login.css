@@ -11,6 +11,17 @@
     padding: 15px !important;
 }
 
+
+.icon-eye {
+    position: absolute;
+    right: 33px;
+    top: 77%;
+    transform: translateY(-50%);
+    color: black;
+    z-index: 2;
+}
+
+
 .custom-button {
     margin-bottom: 24px !important;
     --border-radius: 16px;

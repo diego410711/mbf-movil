@@ -15,7 +15,7 @@ import {
   IonSpinner,
 } from "@ionic/react";
 import "./Login.css";
-import { logoGoogle, logoFacebook } from "ionicons/icons";
+import { logoGoogle, logoFacebook, eyeOffOutline, eyeOutline } from "ionicons/icons";
 import validateEmail from "../../utils/validateEmail";
 import { login } from "../../services/authService";
 import ReCAPTCHA from "react-google-recaptcha";
@@ -26,13 +26,13 @@ export default function Login(props: {
   [x: string]: any;
   setIsLogged: (arg0: boolean) => void;
 }) {
-  const [password, setPassword] = useState("");
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [token, setToken] = useState("");
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const history = useHistory();
 
   const saveToken = (newToken: string) => {
@@ -152,12 +152,13 @@ export default function Login(props: {
         <IonItem className="custom-item">
           <IonLabel position="floating">Contraseña</IonLabel>
           <IonInput
-            type="password"
+            type={showPassword ? "text" : "password"}
             value={password}
             onIonInput={(e) => setPassword(e.detail.value!)}
             className="custom-input"
             placeholder="Contraseña"
           />
+          <IonIcon className="icon-eye" icon={showPassword ? eyeOffOutline : eyeOutline} onClick={() => setShowPassword(!showPassword)} />
         </IonItem>
         <div className="centered-link">
           <Link to="/forgotpassword">¿Olvidaste tu contraseña?</Link>
