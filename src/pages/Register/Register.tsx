@@ -188,9 +188,7 @@ export default function Register(props: {
                     placeholder={item.text}
                   />
                   {(index === 8 || index === 9) && (
-                    <IonButton fill="clear" onClick={() => index === 8 ? setShowPassword(!showPassword) : setShowConfirmPass(!showConfirmPass)}>
-                      <IonIcon icon={index === 8 ? (showPassword ? eyeOffOutline : eyeOutline) : (showConfirmPass ? eyeOffOutline : eyeOutline)} />
-                    </IonButton>
+                    <IonIcon className="icon-eye" icon={index === 8 ? (showPassword ? eyeOffOutline : eyeOutline) : (showConfirmPass ? eyeOffOutline : eyeOutline)} onClick={() => index === 8 ? setShowPassword(!showPassword) : setShowConfirmPass(!showConfirmPass)} />
                   )}
                 </>
               )}

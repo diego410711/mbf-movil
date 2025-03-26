@@ -4,6 +4,7 @@ import {
   IonButtons,
   IonContent,
   IonHeader,
+  IonIcon,
   IonInput,
   IonItem,
   IonLabel,
@@ -16,6 +17,7 @@ import {
 import "./Resetpassword.css";
 import { handleReset } from "../../services/authService";
 import { useHistory } from "react-router-dom";
+import { eyeOffOutline, eyeOutline } from "ionicons/icons";
 
 export default function ResetPassword(props: { email: string }) {
   const [code, setCode] = useState(0);
@@ -23,6 +25,8 @@ export default function ResetPassword(props: { email: string }) {
   const [ConfirmnewPassword, setConfirmNewPassword] = useState("");
   const [toastMessage, setToastMessage] = useState("");
   const [showToast, setShowToast] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPass, setShowConfirmPass] = useState(false);
 
   const history = useHistory();
 
@@ -69,21 +73,23 @@ export default function ResetPassword(props: { email: string }) {
           <IonLabel position="floating">Contraseña</IonLabel>
           <IonInput
             placeholder="Ingrese su nueva contraseña"
-            type="password"
+            type={showPassword ? "text" : "password"}
             value={newPassword}
             onIonInput={(e) => setNewPassword(e.detail.value!)}
             className="custom-input"
           />
+          <IonIcon className="icon-eye" icon={showPassword ? eyeOffOutline : eyeOutline} onClick={e => setShowPassword(!showPassword)} />
         </IonItem>
         <IonItem className="custom-item">
           <IonLabel position="floating">Confirmar contraseña</IonLabel>
           <IonInput
             placeholder="Confirme su nueva contraseña"
-            type="password"
+            type={showConfirmPass ? "text" : "password"}
             value={ConfirmnewPassword}
             onIonInput={(e) => setConfirmNewPassword(e.detail.value!)}
             className="custom-input"
           />
+          <IonIcon className="icon-eye" icon={showConfirmPass ? eyeOffOutline : eyeOutline} onClick={e => setShowConfirmPass(!showConfirmPass)} />
         </IonItem>
         <div className="container-button">
           <IonButton
