@@ -45,7 +45,7 @@ interface Equipment {
   assignedTechnician?: string; // Técnico asignado
 }
 
-export default function Report(props: { role: string }) {
+export default function Report(props: any) {
   const [searchText, setSearchText] = useState<string>("");
   const [equipmentList, setEquipmentList] = useState<Equipment[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -76,7 +76,8 @@ export default function Report(props: { role: string }) {
   useEffect(() => {
     const fetchEquipment = async () => {
       try {
-        const data = await getEquipment();
+        // Si el usuario es técnico, se envía su nombre; si no, se hace una petición general
+        const data = props.role === "Tecnico" ? await getEquipment(props.name) : await getEquipment();
         setEquipmentList(data);
       } catch (err) {
         setError("No se pudo cargar la lista de equipos. Inténtalo más tarde.");
@@ -86,7 +87,7 @@ export default function Report(props: { role: string }) {
     };
 
     fetchEquipment();
-  }, []);
+  }, [props.name, props.role]); // Se ejecuta si cambian el nombre o el rol
 
   const handleViewPdf = async (id: string, fileName: string): Promise<void> => {
     try {
@@ -185,7 +186,7 @@ export default function Report(props: { role: string }) {
       await updateEquipment(_id, updatedData);
 
       // **Recargar la lista de equipos después de guardar**
-      const updatedList = await getEquipment();
+      const updatedList = props.role === "Tecnico" ? await getEquipment(props.name) : await getEquipment();
       setEquipmentList(updatedList);
 
       // Limpiar estados de edición

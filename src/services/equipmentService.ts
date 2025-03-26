@@ -2,13 +2,14 @@ import axios from "axios";
 
 export const API_URL = `${import.meta.env.VITE_API_URL_TEST}/equipment`;
 
-// Obtener la lista de equipos
-export const getEquipment = async () => {
+// Obtener la lista de equipos con opción de filtrar por técnico
+export const getEquipment = async (technicianName?: string) => {
   try {
-    const response = await axios.get(API_URL);
+    const url = technicianName ? `${API_URL}?technicianName=${technicianName}` : API_URL;
+    const response = await axios.get(url);
     return response.data;
-  } catch (error) {
-    console.error("Error al obtener los equipos:", error);
+  } catch (error: any) {
+    console.error("Error al obtener los equipos:", error.response?.data || error);
     throw error;
   }
 };

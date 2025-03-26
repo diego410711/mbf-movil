@@ -113,7 +113,7 @@ const App: React.FC = () => {
               <TechnicalService role={role} />
             </Route>
             <Route path="/report" exact={true}>
-              <Report role={role} />
+              <Report role={role} name={name} />
             </Route>
             <Route path="/qrscan" exact={true}>
               <QRScan />
