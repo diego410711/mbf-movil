@@ -20,6 +20,8 @@ import {
   IonTextarea,
   IonInput,
   useIonToast,
+  IonRadio,
+  IonRadioGroup,
 } from "@ionic/react";
 import {
   deletePhotoFromEquipment,
@@ -43,6 +45,7 @@ interface Equipment {
   diagnosis?: string;
   invoice?: string; // Factura
   assignedTechnician?: string; // Técnico asignado
+  customerApproval?: string; // Aprobación del cliente
 }
 
 export default function Report(props: any) {
@@ -379,13 +382,24 @@ export default function Report(props: any) {
                       label: "Técnico Asignado",
                       field: "assignedTechnician",
                       value: equipment.assignedTechnician || "No asignado",
+                    }, {
+                      label: "Aprobación del cliente",
+                      field: "customerApproval",
+                      value: equipment.customerApproval || "No disponible"
                     },
+
                   ].map((field, index) => (
                     <IonCol key={index} size="12" size-sm="2">
                       {field.label === "Foto" ? (
                         Array.isArray(field.value) && field.value.length > 0 ? (
                           <>
-                            {!isEditing[equipment._id] ? <strong className="ion-hide-sm-up">{field.label}</strong> : <IonLabel position="floating" className="custom-label">{field.label} :</IonLabel>}
+                            {!isEditing[equipment._id] ? (
+                              <strong className="ion-hide-sm-up">{field.label}</strong>
+                            ) : (
+                              <IonLabel position="floating" className="custom-label">
+                                {field.label} :
+                              </IonLabel>
+                            )}
                             <div>
                               {field.value.map((photoUrl, index) => (
                                 <div key={index} className="container-image">
@@ -405,49 +419,88 @@ export default function Report(props: any) {
                                   />
                                 </div>
                               ))}
-                              {isEditing[equipment._id] && <input
-                                type="file"
-                                accept="image/*"
-                                multiple
-                                onChange={(event) => handleAddPhoto(equipment._id, event)}
-                              />}
+                              {isEditing[equipment._id] && (
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  multiple
+                                  onChange={(event) => handleAddPhoto(equipment._id, event)}
+                                />
+                              )}
                             </div>
                           </>
                         ) : (
                           <>
-                            {!isEditing[equipment._id] && (!editingEquipment?.photos || editingEquipment.photos.length === 0) ? (
+                            {!isEditing[equipment._id] &&
+                              (!editingEquipment?.photos || editingEquipment.photos.length === 0) ? (
                               <strong className="ion-hide-sm-up">{field.label}: </strong>
                             ) : (
-                              <IonLabel position="floating" className="custom-label">{field.label}: </IonLabel>
+                              <IonLabel position="floating" className="custom-label">
+                                {field.label}:
+                              </IonLabel>
                             )}
 
                             {!editingEquipment?.photos || editingEquipment.photos.length === 0 ? (
-                              isEditing[equipment._id] ? ( // Solo mostrar cuando está en edición
-                                <>
-                                  <input
-                                    type="file"
-                                    accept="image/*"
-                                    multiple
-                                    onChange={(event) => handleAddPhoto(equipment._id, event)}
-                                  />
-                                </>
+                              isEditing[equipment._id] ? (
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  multiple
+                                  onChange={(event) => handleAddPhoto(equipment._id, event)}
+                                />
                               ) : (
                                 <IonLabel>No disponible</IonLabel>
                               )
                             ) : null}
-
                           </>
-
-
                         )
                       ) : field.label === "Factura" ? (
                         <>
-                          {!isEditing[equipment._id] ? <strong className="ion-hide-sm-up">{field.label}:</strong> : <IonLabel position="floating" className="custom-label">{field.label}: </IonLabel>} {field.value}
+                          {!isEditing[equipment._id] ? (
+                            <strong className="ion-hide-sm-up">{field.label}:</strong>
+                          ) : (
+                            <IonLabel position="floating" className="custom-label">
+                              {field.label}:
+                            </IonLabel>
+                          )}{" "}
+                          {field.value}
+                        </>
+                      ) : field.label === "Aprobación del cliente" ? (
+                        <>
+                          {isEditing[equipment._id] && isTechnician ? (
+                            <>
+                              <IonLabel position="floating" className="custom-label">
+                                {field.label}:
+                              </IonLabel>
+                              <IonRadioGroup
+                                value={editingEquipment[`${equipment._id}-${field.field}`] ?? field.value}
+                                onIonChange={(e) =>
+                                  handleInputChange(equipment._id, field.field!, e.detail.value)
+                                }
+                              >
+                                <IonItem className="custom-item">
+                                  <IonLabel>Sí</IonLabel>
+                                  <IonRadio slot="start" className="custom-radio" value="Sí" />
+                                </IonItem>
+                                <IonItem className="custom-item">
+                                  <IonLabel>No</IonLabel>
+                                  <IonRadio slot="start" className="custom-radio" value="No" />
+                                </IonItem>
+                              </IonRadioGroup>
+                            </>
+                          ) : (
+                            <>  <strong className="ion-hide-sm-up">{field.label}: </strong>
+                              <IonText>{field.value?.toString() ?? "No disponible"}</IonText></>
+                          )}
                         </>
                       ) : (
                         <>
-                          {isEditing[equipment._id] ? <IonLabel position="floating">{field.label}:</IonLabel> : <strong className="ion-hide-sm-up">{field.label}: </strong>}
-                          {isEditing[equipment._id] ? ( // Si está en edición, usar inputs
+                          {isEditing[equipment._id] ? (
+                            <IonLabel position="floating">{field.label}:</IonLabel>
+                          ) : (
+                            <strong className="ion-hide-sm-up">{field.label}: </strong>
+                          )}
+                          {isEditing[equipment._id] ? (
                             field.label === "Ficha Técnica" || field.label === "Diagnóstico" ? (
                               <IonTextarea
                                 value={
@@ -463,7 +516,7 @@ export default function Report(props: any) {
                             ) : (
                               <IonInput
                                 value={
-                                  editingEquipment[`${equipment._id}-${field.field}`] ??
+                                  editingEquipment[`${equipment._id}-${field.field!}`] ??
                                   field.value?.toString() ??
                                   ""
                                 }
@@ -474,11 +527,12 @@ export default function Report(props: any) {
                               />
                             )
                           ) : (
-                            <IonText>{field.value?.toString() ?? "No disponible"}</IonText> // Modo solo lectura
+                            <IonText>{field.value?.toString() ?? "No disponible"}</IonText>
                           )}
                         </>
                       )}
                     </IonCol>
+
                   ))}
 
                   {/* Mostrar botones SOLO si ese equipo está en edición */}
