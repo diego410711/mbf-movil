@@ -22,6 +22,7 @@ import {
   useIonToast,
   IonRadio,
   IonRadioGroup,
+  IonDatetime,
 } from "@ionic/react";
 import {
   deletePhotoFromEquipment,
@@ -46,6 +47,8 @@ interface Equipment {
   invoice?: string; // Factura
   assignedTechnician?: string; // Técnico asignado
   customerApproval?: string; // Aprobación del cliente
+  authorizationDate?: string; // Fecha de autorización
+  deliveryDate?: string; // Fecha de entrega al cliente
 }
 
 export default function Report(props: any) {
@@ -387,7 +390,16 @@ export default function Report(props: any) {
                       field: "customerApproval",
                       value: equipment.customerApproval || "No disponible"
                     },
-
+                    {
+                      label: "Fecha de Autorización",
+                      field: "authorizationDate",
+                      value: equipment.authorizationDate ? new Date(equipment.authorizationDate).toLocaleDateString() : "No disponible",
+                    },
+                    {
+                      label: "Fecha de Entrega al Cliente",
+                      field: "deliveryDate",
+                      value: equipment.deliveryDate ? new Date(equipment.deliveryDate).toLocaleDateString() : "No disponible",
+                    },
                   ].map((field, index) => (
                     <IonCol key={index} size="12" size-sm="2">
                       {field.label === "Foto" ? (
@@ -489,8 +501,29 @@ export default function Report(props: any) {
                               </IonRadioGroup>
                             </>
                           ) : (
-                            <>  <strong className="ion-hide-sm-up">{field.label}: </strong>
-                              <IonText>{field.value?.toString() ?? "No disponible"}</IonText></>
+                            <>
+                              <strong className="ion-hide-sm-up">{field.label}: </strong>
+                              <IonText>{field.value?.toString() ?? "No disponible"}</IonText>
+                            </>
+                          )}
+                        </>
+                      ) : field.label === "Fecha de Autorización" || field.label === "Fecha de Entrega al Cliente" ? (
+                        <>
+                          {isEditing[equipment._id] && isTechnician ? (
+                            <>
+                              <IonLabel position="floating">{field.label}:</IonLabel>
+                              <input
+                                type="date"
+                                value={editingEquipment[`${equipment._id}-${field.field}`] ?? field.value ?? ""}
+                                onChange={(e) => handleInputChange(equipment._id, field.field!, e.target.value)}
+                                className="custom-input"
+                              />
+                            </>
+                          ) : (
+                            <>
+                              <strong className="ion-hide-sm-up">{field.label}: </strong>
+                              <IonText>{field.value?.toString() ?? "No disponible"}</IonText>
+                            </>
                           )}
                         </>
                       ) : (
@@ -504,9 +537,7 @@ export default function Report(props: any) {
                             field.label === "Ficha Técnica" || field.label === "Diagnóstico" ? (
                               <IonTextarea
                                 value={
-                                  editingEquipment[`${equipment._id}-${field.field}`] ??
-                                  field.value?.toString() ??
-                                  ""
+                                  editingEquipment[`${equipment._id}-${field.field}`] ?? field.value?.toString() ?? ""
                                 }
                                 onIonInput={(e) =>
                                   handleInputChange(equipment._id, field.field!, e.detail.value ?? "")
@@ -516,9 +547,7 @@ export default function Report(props: any) {
                             ) : (
                               <IonInput
                                 value={
-                                  editingEquipment[`${equipment._id}-${field.field!}`] ??
-                                  field.value?.toString() ??
-                                  ""
+                                  editingEquipment[`${equipment._id}-${field.field!}`] ?? field.value?.toString() ?? ""
                                 }
                                 onIonInput={(e) =>
                                   handleInputChange(equipment._id, field.field!, e.detail.value ?? "")
@@ -532,7 +561,6 @@ export default function Report(props: any) {
                         </>
                       )}
                     </IonCol>
-
                   ))}
 
                   {/* Mostrar botones SOLO si ese equipo está en edición */}
