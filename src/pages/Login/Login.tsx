@@ -60,7 +60,9 @@ export default function Login(props: {
         saveToken(data.access_token);
         props.setRole(data.role);
         props.setEmail(data.email);
-        props.setName(`${data.name + " " + data.lastname}`);
+        props.setName(`${data.name + " " + data.lastname}`)
+        props.setFirstname(data.name);
+        props.setLastname(data.lastname);
         props.setPhone(data.phone);
         props.setAddress(data.address);
         props.setUserId(data.userId)

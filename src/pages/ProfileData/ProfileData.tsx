@@ -16,15 +16,10 @@ import { useState } from "react";
 import { updateUser } from "../../services/authService"; // Importa tu servicio de actualización
 import "./ProfileData.css";
 
-export default function (props: {
-  name: string;
-  email: string;
-  phone: string;
-  address: string;
-  userId: string;
-}) {
+export default function (props: any) {
   const [profileData, setProfileData] = useState({
-    name: props.name,
+    name: props.firstname,
+    lastname: props.lastname,
     email: props.email,
     phone: props.phone,
     address: props.address,
@@ -78,6 +73,15 @@ export default function (props: {
               value={profileData.name}
               onIonInput={(e) =>
                 handleInputChange("name", e.detail.value || "")
+              }
+              className="custom-input"
+            />
+          </IonItem> <IonItem className="custom-item">
+            <IonLabel position="floating">Apellido</IonLabel>
+            <IonInput
+              value={profileData.lastname}
+              onIonInput={(e) =>
+                handleInputChange("lastname", e.detail.value || "")
               }
               className="custom-input"
             />

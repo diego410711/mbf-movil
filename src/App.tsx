@@ -62,6 +62,8 @@ const App: React.FC = () => {
   const [isLogged, setIsLogged] = useState(false);
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("");
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
@@ -88,6 +90,8 @@ const App: React.FC = () => {
                 setPhone={setPhone}
                 setAddress={setAddress}
                 setUserId={setUserId}
+                setFirstname={setFirstname}
+                setLastname={setLastname}
               />
             </Route>
             <Route path="/page" exact={true}>
@@ -129,7 +133,8 @@ const App: React.FC = () => {
             </Route>
             <Route path="/profiledata" exact={true}>
               <ProfileData
-                name={name}
+                firstname={firstname}
+                lastname={lastname}
                 email={email}
                 phone={phone}
                 address={address}
