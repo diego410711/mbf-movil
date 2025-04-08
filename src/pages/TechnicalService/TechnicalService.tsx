@@ -77,6 +77,8 @@ const TechnicalService: React.FC<TechnicalServiceProps> = (props: any) => {
       if (props.phone) formData.append("phone", props.phone);
       if (props.address) formData.append("address", props.address);
       if (props.userId) formData.append("userId", props.userId);
+      if (props.doc) formData.append("doc", props.doc);
+      if (props.company) formData.append("company", props.company);
 
       // Agregar las fotos al FormData
       photos.forEach((photo, index) => {

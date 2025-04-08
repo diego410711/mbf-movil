@@ -22,16 +22,12 @@ import validateEmail from "../../utils/validateEmail";
 import { register } from "../../services/authService";
 import ReCAPTCHA from "react-google-recaptcha";
 
-export default function Register(props: {
-  setIsLogged: (arg0: boolean) => void;
-}) {
+export default function Register(props: any) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [lastname, setLastname] = useState("");
   const [position, setPosition] = useState("");
-  const [doc, setDoc] = useState("");
-  const [company, setCompany] = useState("");
   const [confirmpass, setConfirmpass] = useState("");
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
@@ -54,8 +50,8 @@ export default function Register(props: {
     if (
       !name ||
       !lastname ||
-      !company ||
-      !doc ||
+      !props.company ||
+      !props.doc ||
       !position ||
       !email ||
       !password ||
@@ -84,8 +80,8 @@ export default function Register(props: {
       await register(
         name,
         lastname,
-        company,
-        doc,
+        props.company,
+        props.doc,
         position,
         email,
         password,
@@ -130,8 +126,8 @@ export default function Register(props: {
         {[
           { text: "Nombre", value: name, set: setName },
           { text: "Apellido", value: lastname, set: setLastname },
-          { text: "Nombre empresa", value: company, set: setCompany },
-          { text: "Nit o C.C.", value: doc, set: setDoc },
+          { text: "Nombre empresa", value: props.company, set: props.setCompany },
+          { text: "Nit o C.C.", value: props.doc, set: props.setDoc },
           { text: "Cargo", value: position, set: setPosition },
           { text: "Correo Electrónico", value: email, set: setEmail },
           { text: "Celular", value: phone, set: setPhone },

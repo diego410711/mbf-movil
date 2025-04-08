@@ -68,6 +68,8 @@ const App: React.FC = () => {
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [userId, setUserId] = useState("");
+  const [doc, setDoc] = useState("");
+  const [company, setCompany] = useState("");
 
   return (
     <IonApp>
@@ -92,6 +94,8 @@ const App: React.FC = () => {
                 setUserId={setUserId}
                 setFirstname={setFirstname}
                 setLastname={setLastname}
+                setDoc={setDoc}
+                setCompany={setCompany}
               />
             </Route>
             <Route path="/page" exact={true}>
@@ -99,7 +103,7 @@ const App: React.FC = () => {
             </Route>
 
             <Route path="/register" exact={true}>
-              <Register setIsLogged={setIsLogged} />
+              <Register setIsLogged={setIsLogged} doc={doc} setDoc={setDoc} company={company} setCompany={setCompany} />
             </Route>
             <Route path="/forgotpassword" exact={true}>
               <ForgotPassword email={email} setEmail={setEmail} />
@@ -121,6 +125,8 @@ const App: React.FC = () => {
                 phone={phone}
                 address={address}
                 userId={userId}
+                doc={doc}
+                company={company}
               />
             </Route>
             <Route path="/report" exact={true}>
