@@ -22,7 +22,7 @@ interface TechnicalServiceProps {
   role: string;
 }
 
-const TechnicalService: React.FC<TechnicalServiceProps> = (props) => {
+const TechnicalService: React.FC<TechnicalServiceProps> = (props: any) => {
   const [name, setName] = useState("");
   const [brand, setBrand] = useState("");
   const [model, setModel] = useState("");
@@ -70,6 +70,13 @@ const TechnicalService: React.FC<TechnicalServiceProps> = (props) => {
       formData.append("model", model);
       formData.append("serial", serial);
       formData.append("issue", issue);
+      // Nuevos datos opcionales del usuario/técnico
+      if (props.firstname) formData.append("firstname", props.firstname);
+      if (props.lastname) formData.append("lastname", props.lastname);
+      if (props.email) formData.append("email", props.email);
+      if (props.phone) formData.append("phone", props.phone);
+      if (props.address) formData.append("address", props.address);
+      if (props.userId) formData.append("userId", props.userId);
 
       // Agregar las fotos al FormData
       photos.forEach((photo, index) => {

@@ -55,12 +55,12 @@ function Inventory(props: any) {
     technology: "Neumatico",
     maintenancePriority: "Baja",
     FT: "",
-    firstname: props.firstname,
-    lastname: props.lastname,
-    email: props.email,
-    phone: props.phone,
-    address: props.address,
-    userId: props.userId,
+    // firstname: props.firstname,
+    // lastname: props.lastname,
+    // email: props.email,
+    // phone: props.phone,
+    // address: props.address,
+    // userId: props.userId,
   };
 
   const [formData, setFormData] = useState<FormData>(initialFormData);
