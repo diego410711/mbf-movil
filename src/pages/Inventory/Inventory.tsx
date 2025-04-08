@@ -19,7 +19,7 @@ import "./Inventory.css";
 import { saveEquipment } from "../../services/inventoryService"; // Servicio de API
 import React from "react";
 
-const Inventory: React.FC = () => {
+function Inventory(props: any) {
   interface FormData {
     [key: string]: string;
     name: string;
@@ -55,6 +55,12 @@ const Inventory: React.FC = () => {
     technology: "Neumatico",
     maintenancePriority: "Baja",
     FT: "",
+    firstname: props.firstname,
+    lastname: props.lastname,
+    email: props.email,
+    phone: props.phone,
+    address: props.address,
+    userId: props.userId,
   };
 
   const [formData, setFormData] = useState<FormData>(initialFormData);

@@ -143,7 +143,15 @@ const App: React.FC = () => {
             </Route>
             <Route path="/lang" component={Language} exact={true} />
 
-            <Route path="/inventory" exact={true} component={Inventory} />
+            <Route path="/inventory" exact={true}>
+              <Inventory
+                firstname={firstname}
+                lastname={lastname}
+                email={email}
+                phone={phone}
+                address={address}
+                userId={userId} />
+            </Route>
             <Route path="/preagends" exact={true} component={Preagends} />
             {/* <Route path="/:name" exact={true}>
               <Page />
