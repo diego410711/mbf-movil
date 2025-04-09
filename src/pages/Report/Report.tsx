@@ -385,10 +385,6 @@ export default function Report(props: any) {
                       label: "Técnico Asignado",
                       field: "assignedTechnician",
                       value: equipment.assignedTechnician || "No asignado",
-                    }, {
-                      label: "Aprobación del cliente",
-                      field: "customerApproval",
-                      value: equipment.customerApproval || "No disponible"
                     },
                     {
                       label: "Fecha de Autorización",
@@ -477,54 +473,10 @@ export default function Report(props: any) {
                           )}{" "}
                           {field.value}
                         </>
-                      ) : field.label === "Aprobación del cliente" ? (
+                      ) : field.label === "Fecha de Autorización" && isEditing[equipment._id] || field.label === "Fecha de Entrega al Cliente" && isEditing[equipment._id] ? (
                         <>
-                          {isEditing[equipment._id] && isTechnician ? (
-                            <>
-                              <IonLabel position="floating" className="custom-label">
-                                {field.label}:
-                              </IonLabel>
-                              <IonRadioGroup
-                                value={editingEquipment[`${equipment._id}-${field.field}`] ?? field.value}
-                                onIonChange={(e) =>
-                                  handleInputChange(equipment._id, field.field!, e.detail.value)
-                                }
-                              >
-                                <IonItem className="custom-item">
-                                  <IonLabel>Sí</IonLabel>
-                                  <IonRadio slot="start" className="custom-radio" value="Sí" />
-                                </IonItem>
-                                <IonItem className="custom-item">
-                                  <IonLabel>No</IonLabel>
-                                  <IonRadio slot="start" className="custom-radio" value="No" />
-                                </IonItem>
-                              </IonRadioGroup>
-                            </>
-                          ) : (
-                            <>
-                              <strong className="ion-hide-sm-up">{field.label}: </strong>
-                              <IonText>{field.value?.toString() ?? "No disponible"}</IonText>
-                            </>
-                          )}
-                        </>
-                      ) : field.label === "Fecha de Autorización" || field.label === "Fecha de Entrega al Cliente" ? (
-                        <>
-                          {isEditing[equipment._id] && isTechnician ? (
-                            <>
-                              <IonLabel position="floating">{field.label}:</IonLabel>
-                              <input
-                                type="date"
-                                value={editingEquipment[`${equipment._id}-${field.field}`] ?? field.value ?? ""}
-                                onChange={(e) => handleInputChange(equipment._id, field.field!, e.target.value)}
-                                className="custom-input"
-                              />
-                            </>
-                          ) : (
-                            <>
-                              <strong className="ion-hide-sm-up">{field.label}: </strong>
-                              <IonText>{field.value?.toString() ?? "No disponible"}</IonText>
-                            </>
-                          )}
+                          <strong className="ion-hide-sm-up">{field.label}: </strong>
+                          <IonText>{field.value?.toString() ?? "No disponible"}</IonText>
                         </>
                       ) : (
                         <>
