@@ -2,10 +2,16 @@ import axios from "axios";
 
 export const API_URL = `${import.meta.env.VITE_API_URL_TEST}/equipment`;
 
-// Obtener la lista de equipos con opción de filtrar por técnico
-export const getEquipment = async (technicianName?: string) => {
+export const getEquipment = async (
+  technicianName?: string,
+  email?: string
+) => {
   try {
-    const url = technicianName ? `${API_URL}?technicianName=${technicianName}` : API_URL;
+    const params = new URLSearchParams();
+    if (technicianName) params.append('technicianName', technicianName);
+    if (email) params.append('email', email);
+
+    const url = `${API_URL}?${params.toString()}`;
     const response = await axios.get(url);
     return response.data;
   } catch (error: any) {
@@ -13,6 +19,7 @@ export const getEquipment = async (technicianName?: string) => {
     throw error;
   }
 };
+
 
 // Enviar datos del formulario para solicitar un servicio técnico
 export const submitTechnicalServiceRequest = async (formData: FormData) => {

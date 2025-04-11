@@ -82,8 +82,16 @@ export default function Report(props: any) {
   useEffect(() => {
     const fetchEquipment = async () => {
       try {
-        // Si el usuario es técnico, se envía su nombre; si no, se hace una petición general
-        const data = props.role === "Tecnico" ? await getEquipment(props.name) : await getEquipment();
+        let data;
+
+        if (props.role === "Tecnico") {
+          data = await getEquipment(props.name);
+        } else if (props.role === "Cliente") {
+          data = await getEquipment(undefined, props.email);
+        } else {
+          data = await getEquipment();
+        }
+
         setEquipmentList(data);
       } catch (err) {
         setError("No se pudo cargar la lista de equipos. Inténtalo más tarde.");
@@ -93,7 +101,9 @@ export default function Report(props: any) {
     };
 
     fetchEquipment();
-  }, [props.name, props.role]); // Se ejecuta si cambian el nombre o el rol
+  }, [props.name, props.role, props.email]); // Asegúrate de incluir props.email en las dependencias
+
+  
 
   const handleViewPdf = async (id: string, fileName: string): Promise<void> => {
     try {
