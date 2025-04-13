@@ -68,3 +68,20 @@ export const deletePhotoFromEquipment = async (equipmentId: string, photoUrl: st
     throw error;
   }
 };
+
+
+// ✅ NUEVO: Aprobar o rechazar servicio como cliente
+export const updateCustomerApproval = async (
+  equipmentId: string,
+  approval: "Aprobado" | "Rechazado"
+) => {
+  try {
+    const response = await axios.patch(`${API_URL}/${equipmentId}/customer-approval`, {
+      approval,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error al actualizar aprobación del cliente:", error);
+    throw error;
+  }
+};

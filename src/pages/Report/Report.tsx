@@ -28,6 +28,7 @@ import {
   deletePhotoFromEquipment,
   fetchPDFServices,
   getEquipment,
+  updateCustomerApproval,
   updateEquipment,
 } from "../../services/equipmentService";
 import "./Report.css";
@@ -299,9 +300,18 @@ export default function Report(props: any) {
     }
   };
 
-  function handleApproval(_id: string, arg1: boolean): void {
-    throw new Error("Function not implemented.");
-  }
+  const handleApproval = async (equipmentId: string, approval: boolean) => {
+    try {
+      const status = approval ? "Aprobado" : "Rechazado";
+      const response = await updateCustomerApproval(equipmentId, status);
+      console.log("Respuesta del backend:", response);
+      // Puedes mostrar una notificación al usuario aquí si quieres
+      alert(`Servicio ${status.toLowerCase()} correctamente.`);
+    } catch (error) {
+      console.error("Error al actualizar la aprobación del cliente:", error);
+      alert("No se pudo actualizar la aprobación del servicio.");
+    }
+  };
 
   return (
     <IonPage>
