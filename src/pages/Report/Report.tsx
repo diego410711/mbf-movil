@@ -103,7 +103,7 @@ export default function Report(props: any) {
     fetchEquipment();
   }, [props.name, props.role, props.email]); // Asegúrate de incluir props.email en las dependencias
 
-  
+
 
   const handleViewPdf = async (id: string, fileName: string): Promise<void> => {
     try {
@@ -298,6 +298,10 @@ export default function Report(props: any) {
       });
     }
   };
+
+  function handleApproval(_id: string, arg1: boolean): void {
+    throw new Error("Function not implemented.");
+  }
 
   return (
     <IonPage>
@@ -544,7 +548,22 @@ export default function Report(props: any) {
                       >
                         Ver PDF
                       </IonButton>
-
+                      {equipment.diagnosis && props.role === "Cliente" && (
+                        <div className="flex justify-end mt-2">
+                          <IonButton
+                            color="success"
+                            onClick={() => handleApproval(equipment._id, true)}
+                          >
+                            Aprobar Servicio
+                          </IonButton>
+                          <IonButton
+                            color="danger"
+                            onClick={() => handleApproval(equipment._id, false)}
+                          >
+                            Rechazar Servicio
+                          </IonButton>
+                        </div>
+                      )}
                       {isTechnician &&
                         <IonButton
                           color="secondary"
