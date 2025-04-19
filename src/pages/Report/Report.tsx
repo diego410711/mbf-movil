@@ -322,6 +322,13 @@ export default function Report(props: any) {
     }
   };
 
+  useEffect(() => {
+    const map: Record<string, "Aprobado" | "Rechazado" | null> = {};
+    equipmentList.forEach(eq => {
+      map[eq._id] = eq.customerApproval ?? null;
+    });
+    setApprovalStatusMap(map);
+  }, [equipmentList]);
 
 
   return (
@@ -569,24 +576,31 @@ export default function Report(props: any) {
                       >
                         Ver PDF
                       </IonButton>
-                      {equipment.diagnosis && props.role === "Cliente" && (
+                      {props.role === "Cliente" && (
                         <div className="flex justify-end mt-2">
-                          {approvalStatusMap[equipment._id] === "Aprobado" ? (
-                            <IonButton disabled color="success">Servicio Aprobado</IonButton>
-                          ) : approvalStatusMap[equipment._id] === "Rechazado" ? (
-                            <IonButton disabled color="danger">Servicio Rechazado</IonButton>
-                          ) : (
+                          {approvalStatusMap[equipment._id] === null ? (
                             <>
-                              <IonButton color="success" onClick={() => handleApproval(equipment._id, true)}>
+                              <IonButton
+                                color="success"
+                                onClick={() => handleApproval(equipment._id, true)}
+                              >
                                 Aprobar Servicio
                               </IonButton>
-                              <IonButton color="danger" onClick={() => handleApproval(equipment._id, false)}>
+                              <IonButton
+                                color="danger"
+                                onClick={() => handleApproval(equipment._id, false)}
+                              >
                                 Rechazar Servicio
                               </IonButton>
                             </>
+                          ) : (
+                            <IonButton disabled color={approvalStatusMap[equipment._id] === "Aprobado" ? "success" : "danger"}>
+                              Servicio {approvalStatusMap[equipment._id]?.toLowerCase()}
+                            </IonButton>
                           )}
                         </div>
                       )}
+
 
                       {isTechnician &&
                         <IonButton
