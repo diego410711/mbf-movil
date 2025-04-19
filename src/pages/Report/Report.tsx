@@ -63,6 +63,7 @@ export default function Report(props: any) {
   const [isEditing, setIsEditing] = useState<Record<string, boolean>>({});
   const [presentToast] = useIonToast();
   const [selectedPhotos, setSelectedPhotos] = useState<{ [key: string]: File[] }>({});
+  const [approvalStatusMap, setApprovalStatusMap] = useState<{ [id: string]: "Aprobado" | "Rechazado" | null }>({});
 
 
   useEffect(() => {
@@ -303,15 +304,25 @@ export default function Report(props: any) {
   const handleApproval = async (equipmentId: string, approval: boolean) => {
     try {
       const status = approval ? "Aprobado" : "Rechazado";
-      const response = await updateCustomerApproval(equipmentId, status);
+
+      const response = await updateCustomerApproval(equipmentId, status); // Llama al backend
+
       console.log("Respuesta del backend:", response);
-      // Puedes mostrar una notificación al usuario aquí si quieres
+
+      // Solo si la API responde correctamente, actualiza el estado visual
+      setApprovalStatusMap(prev => ({
+        ...prev,
+        [equipmentId]: status,
+      }));
+
       alert(`Servicio ${status.toLowerCase()} correctamente.`);
     } catch (error) {
       console.error("Error al actualizar la aprobación del cliente:", error);
       alert("No se pudo actualizar la aprobación del servicio.");
     }
   };
+
+
 
   return (
     <IonPage>
@@ -560,20 +571,23 @@ export default function Report(props: any) {
                       </IonButton>
                       {equipment.diagnosis && props.role === "Cliente" && (
                         <div className="flex justify-end mt-2">
-                          <IonButton
-                            color="success"
-                            onClick={() => handleApproval(equipment._id, true)}
-                          >
-                            Aprobar Servicio
-                          </IonButton>
-                          <IonButton
-                            color="danger"
-                            onClick={() => handleApproval(equipment._id, false)}
-                          >
-                            Rechazar Servicio
-                          </IonButton>
+                          {approvalStatusMap[equipment._id] === "Aprobado" ? (
+                            <IonButton disabled color="success">Servicio Aprobado</IonButton>
+                          ) : approvalStatusMap[equipment._id] === "Rechazado" ? (
+                            <IonButton disabled color="danger">Servicio Rechazado</IonButton>
+                          ) : (
+                            <>
+                              <IonButton color="success" onClick={() => handleApproval(equipment._id, true)}>
+                                Aprobar Servicio
+                              </IonButton>
+                              <IonButton color="danger" onClick={() => handleApproval(equipment._id, false)}>
+                                Rechazar Servicio
+                              </IonButton>
+                            </>
+                          )}
                         </div>
                       )}
+
                       {isTechnician &&
                         <IonButton
                           color="secondary"
