@@ -578,7 +578,7 @@ export default function Report(props: any) {
                       </IonButton>
                       {props.role === "Cliente" && (
                         <div className="flex justify-end mt-2">
-                          {approvalStatusMap[equipment._id] === null ? (
+                          {!approvalStatusMap[equipment._id] ? (
                             <>
                               <IonButton
                                 color="success"
