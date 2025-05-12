@@ -304,23 +304,32 @@ export default function Report(props: any) {
   const handleApproval = async (equipmentId: string, approval: boolean) => {
     try {
       const status = approval ? "Aprobado" : "Rechazado";
-
-      const response = await updateCustomerApproval(equipmentId, status); // Llama al backend
-
+  
+      const response = await updateCustomerApproval(equipmentId, status); // Respuesta debería incluir fecha actualizada
+  
       console.log("Respuesta del backend:", response);
-
-      // Solo si la API responde correctamente, actualiza el estado visual
+  
+      // Actualizar visualmente el mapa de aprobación
       setApprovalStatusMap(prev => ({
         ...prev,
         [equipmentId]: status,
       }));
-
+  
+      // 🔁 ACTUALIZAR equipmentList para que se refleje en la UI
+      setEquipmentList((prev) =>
+        prev.map((eq) =>
+          eq._id === equipmentId ? { ...eq, ...response } : eq
+        )
+      );
+  
       alert(`Servicio ${status.toLowerCase()} correctamente.`);
     } catch (error) {
       console.error("Error al actualizar la aprobación del cliente:", error);
       alert("No se pudo actualizar la aprobación del servicio.");
     }
   };
+  
+  
 
   useEffect(() => {
     const map: Record<string, "Aprobado" | "Rechazado" | null> = {};
