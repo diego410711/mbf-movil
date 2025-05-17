@@ -41,20 +41,18 @@ const TechnicalDataSheet: React.FC = () => {
   const [searchText, setSearchText] = useState("");
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-
+  const getInventory = async () => {
+    try {
+      const inventory = await fetchInventory();
+      setData(inventory);
+    } catch (error) {
+      console.error("Error fetching inventory:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
   // Obtener datos del backend al montar el componente
   useEffect(() => {
-    const getInventory = async () => {
-      try {
-        const inventory = await fetchInventory();
-        setData(inventory);
-      } catch (error) {
-        console.error("Error fetching inventory:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     getInventory();
   }, []);
 
