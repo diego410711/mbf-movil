@@ -11,6 +11,10 @@ import {
 } from "@ionic/react";
 import QrScanner from "react-qr-scanner";
 import "./QRScan.css";
+import { fetchPDF } from "../../services/inventoryService";
+import { Filesystem, Directory } from "@capacitor/filesystem";
+import { FileOpener } from "@ionic-native/file-opener";
+
 
 const QRScan: React.FC = () => {
   const [scanResult, setScanResult] = useState<string | null>(null);
@@ -75,10 +79,12 @@ const QRScan: React.FC = () => {
 
   const handleScan = (data: any) => {
     if (data) {
-      setScanResult(data.text);
+      const id = data.text;
+      setScanResult(id);
+      handleOpenPDF(id); // 👈 Abre el PDF automáticamente
     }
   };
-
+  
   const handleError = (err: any) => {
     console.error("Error al escanear:", err);
     setError("Error al acceder a la cámara. Verifica los permisos.");
@@ -88,6 +94,24 @@ const QRScan: React.FC = () => {
     setScanResult(null);
     setError(null);
   };
+
+  const handleOpenPDF = async (id: string) => {
+    try {
+      const base64 = await fetchPDF(id);
+      const fileName = `FichaTecnica_${id}.pdf`;
+      const savedFile = await Filesystem.writeFile({
+        path: fileName,
+        data: base64,
+        directory: Directory.External,
+      });
+      alert("Archivo guardado correctamente");
+      await FileOpener.open(savedFile.uri, "application/pdf");
+    } catch (error) {
+      console.error("Error al descargar o abrir el archivo:", error);
+      alert("No se pudo abrir el archivo");
+    }
+  };
+  
 
   const toggleCamera = () => {
     if (videoDevices.length > 1) {
