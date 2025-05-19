@@ -15,9 +15,10 @@ import {
   IonButtons,
   IonMenuButton,
   IonSpinner,
+  useIonViewWillEnter, // ✅ AÑADIDO
 } from "@ionic/react";
-import { useEffect, useState } from "react";
-import { fetchInventory, fetchPDF } from "../../services/inventoryService"; // Servicio para obtener el inventario
+import { useState } from "react";
+import { fetchInventory, fetchPDF } from "../../services/inventoryService";
 import { Directory, Filesystem } from "@capacitor/filesystem";
 import { FileOpener } from "@ionic-native/file-opener";
 import "./TechnicalDataSheet.css";
@@ -41,6 +42,7 @@ const TechnicalDataSheet: React.FC = () => {
   const [searchText, setSearchText] = useState("");
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+
   const getInventory = async () => {
     try {
       const inventory = await fetchInventory();
@@ -51,21 +53,20 @@ const TechnicalDataSheet: React.FC = () => {
       setLoading(false);
     }
   };
-  // Obtener datos del backend al montar el componente
-  useEffect(() => {
-    getInventory();
-  }, []);
 
-  // Filtrar los datos según el texto de búsqueda
+  // ✅ Cargar inventario cada vez que se entra a la vista
+  useIonViewWillEnter(() => {
+    setLoading(true);         // Mostrar spinner mientras se actualiza
+    setSearchText("");        // Opcional: limpiar búsqueda cada vez que entras
+    getInventory();
+  });
+
   const filteredData = data.filter((item) =>
     fields.some((field) => {
       let value = item[field.key];
-
       if (field.type === "date") {
-        // Si es una fecha, convertirla a formato legible
         value = new Intl.DateTimeFormat("es-ES").format(new Date(value));
       }
-
       return (
         typeof value === "string" &&
         value.toLowerCase().includes(searchText.toLowerCase())
@@ -73,24 +74,15 @@ const TechnicalDataSheet: React.FC = () => {
     })
   );
 
-
-  // Función para obtener y manejar el PDF
   const seeFTUrl = async (id: string, fileName: string): Promise<void> => {
     try {
-      // Obtener el PDF en formato Base64 desde el backend
       const base64 = await fetchPDF(id);
-
-      // Guardar el archivo en el dispositivo
       const savedFile = await Filesystem.writeFile({
         path: fileName,
         data: base64,
         directory: Directory.External,
       });
-
-      console.log("Archivo guardado en:", savedFile.uri);
       alert("Archivo guardado correctamente");
-
-      // Abrir el archivo guardado
       await openFile(savedFile.uri);
     } catch (error) {
       console.error("Error al descargar o guardar el archivo:", error);
@@ -101,7 +93,6 @@ const TechnicalDataSheet: React.FC = () => {
   const openFile = async (filePath: string) => {
     try {
       await FileOpener.open(filePath, "application/pdf");
-      console.log("Archivo abierto correctamente");
     } catch (error) {
       console.error("Error al abrir el archivo:", error);
       alert("No se pudo abrir el archivo");
@@ -164,7 +155,7 @@ const TechnicalDataSheet: React.FC = () => {
                 <IonButton
                   onClick={() =>
                     seeFTUrl(
-                      item._id, // ID del inventario
+                      item._id,
                       `FichaTecnica_${item.name || "desconocido"}.pdf`
                     )
                   }
