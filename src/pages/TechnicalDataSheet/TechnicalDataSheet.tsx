@@ -15,13 +15,16 @@ import {
   IonButtons,
   IonMenuButton,
   IonSpinner,
-  useIonViewWillEnter, // ✅ AÑADIDO
+  useIonViewWillEnter,
+  IonImg,
+  IonModal, // ✅ AÑADIDO
 } from "@ionic/react";
 import { useState } from "react";
-import { fetchInventory, fetchPDF } from "../../services/inventoryService";
+import { fetchInventory, fetchPDF, fetchQRCode } from "../../services/inventoryService";
 import { Directory, Filesystem } from "@capacitor/filesystem";
 import { FileOpener } from "@ionic-native/file-opener";
 import "./TechnicalDataSheet.css";
+import { API_URL } from "../../services/inventoryService";
 
 const fields = [
   { label: "Nombre del equipo*", key: "name" },
@@ -42,6 +45,8 @@ const TechnicalDataSheet: React.FC = () => {
   const [searchText, setSearchText] = useState("");
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [showQRModal, setShowQRModal] = useState(false);
+  const [qrImage, setQrImage] = useState<string | null>(null);
 
   const getInventory = async () => {
     try {
@@ -99,6 +104,14 @@ const TechnicalDataSheet: React.FC = () => {
     }
   };
 
+  const showQR = (id: string) => {
+    const qrUrl = `${API_URL}/generate-qr/${id}`; // Usa tu dominio real o proxy
+    setQrImage(qrUrl); // Sin base64, directo
+    setShowQRModal(true);
+  };
+
+
+
   return (
     <IonPage>
       <IonHeader>
@@ -152,6 +165,7 @@ const TechnicalDataSheet: React.FC = () => {
                     </IonCol>
                   ))}
                 </IonRow>
+                <IonButton onClick={() => showQR(item._id)}>Ver QR</IonButton>
                 <IonButton
                   onClick={() =>
                     seeFTUrl(
@@ -166,7 +180,25 @@ const TechnicalDataSheet: React.FC = () => {
             ))}
           </IonList>
         )}
+        <IonModal isOpen={showQRModal} onDidDismiss={() => setShowQRModal(false)}>
+          <IonHeader>
+            <IonToolbar>
+              <IonTitle>Código QR</IonTitle>
+            </IonToolbar>
+          </IonHeader>
+          <IonContent className="ion-padding">
+            {qrImage ? (
+              <IonImg src={qrImage} alt="Código QR" />
+            ) : (
+              <IonText>No se pudo cargar el QR</IonText>
+            )}
+            <IonButton expand="block" onClick={() => setShowQRModal(false)}>
+              Cerrar
+            </IonButton>
+          </IonContent>
+        </IonModal>
       </IonContent>
+
     </IonPage>
   );
 };

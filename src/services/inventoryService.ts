@@ -33,3 +33,20 @@ export const fetchPDF = async (id: string): Promise<string> => {
     throw new Error("Unable to fetch PDF");
   }
 };
+
+
+export const fetchQRCode = async (id: string): Promise<string> => {
+  const response = await axios.get(`/generate-qr/${id}`, {
+    responseType: "arraybuffer",
+  });
+
+  // Convertir el arraybuffer a base64
+  const base64 = btoa(
+    new Uint8Array(response.data).reduce(
+      (data, byte) => data + String.fromCharCode(byte),
+      ""
+    )
+  );
+
+  return base64;
+}
