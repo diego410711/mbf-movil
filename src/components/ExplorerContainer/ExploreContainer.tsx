@@ -18,8 +18,8 @@ export default function ExploreContainer(props: { role: string }) {
     history.push(route);
   };
   return (
-    <IonContent className="ion-padding">
-      <h4 className="text-center">{props.role}</h4>
+    <IonContent>
+      <div>  <h4 className="text-center title-role">{props.role}</h4></div>
       {props.role === "Cliente" ? (
         <div className="profile-grid">
           {[
