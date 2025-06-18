@@ -23,11 +23,14 @@ import {
   IonRadio,
   IonRadioGroup,
   IonDatetime,
+  IonSelect,
+  IonSelectOption,
 } from "@ionic/react";
 import {
   deletePhotoFromEquipment,
   fetchPDFServices,
   getEquipment,
+  getTechnicians,
   updateCustomerApproval,
   updateEquipment,
 } from "../../services/equipmentService";
@@ -64,6 +67,8 @@ export default function Report(props: any) {
   const [presentToast] = useIonToast();
   const [selectedPhotos, setSelectedPhotos] = useState<{ [key: string]: File[] }>({});
   const [approvalStatusMap, setApprovalStatusMap] = useState<{ [id: string]: "Aprobado" | "Rechazado" | null }>({});
+  const [technicians, setTechnicians] = useState<Array<{ _id: string; name: string }>>([]);
+  const [selectedTechnician, setSelectedTechnician] = useState('');
 
 
   useEffect(() => {
@@ -75,6 +80,7 @@ export default function Report(props: any) {
 
 
   const isTechnician = props.role === 'Tecnico';//modifcar este valor con el que viene desde el endpoint de login
+  const isAdministrator = props.role === 'Administrador';//modifcar este valor con el que viene desde el endpoint de login
 
   const handleInputChange = (id: string, field: string, value: string) => {
     setEditingEquipment({ ...editingEquipment, [`${id}-${field}`]: value });
@@ -304,32 +310,30 @@ export default function Report(props: any) {
   const handleApproval = async (equipmentId: string, approval: boolean) => {
     try {
       const status = approval ? "Aprobado" : "Rechazado";
-  
+
       const response = await updateCustomerApproval(equipmentId, status); // Respuesta debería incluir fecha actualizada
-  
+
       console.log("Respuesta del backend:", response);
-  
+
       // Actualizar visualmente el mapa de aprobación
       setApprovalStatusMap(prev => ({
         ...prev,
         [equipmentId]: status,
       }));
-  
+
       // 🔁 ACTUALIZAR equipmentList para que se refleje en la UI
       setEquipmentList((prev) =>
         prev.map((eq) =>
           eq._id === equipmentId ? { ...eq, ...response } : eq
         )
       );
-  
+
       alert(`Servicio ${status.toLowerCase()} correctamente.`);
     } catch (error) {
       console.error("Error al actualizar la aprobación del cliente:", error);
       alert("No se pudo actualizar la aprobación del servicio.");
     }
   };
-  
-  
 
   useEffect(() => {
     const map: Record<string, "Aprobado" | "Rechazado" | null> = {};
@@ -339,6 +343,11 @@ export default function Report(props: any) {
     setApprovalStatusMap(map);
   }, [equipmentList]);
 
+  useEffect(() => {
+    getTechnicians()
+      .then((data) => setTechnicians(data))
+      .catch((err) => console.error("Error al cargar técnicos", err));
+  }, []);
 
   return (
     <IonPage>
@@ -524,45 +533,75 @@ export default function Report(props: any) {
                           )}{" "}
                           {field.value}
                         </>
-                      ) : field.label === "Fecha de Autorización" && isEditing[equipment._id] || field.label === "Fecha de Entrega al Cliente" && isEditing[equipment._id] ? (
-                        <>
-                          <strong className="ion-hide-sm-up">{field.label}: </strong>
-                          <IonText>{field.value?.toString() ?? "No disponible"}</IonText>
-                        </>
-                      ) : (
+                      ) : field.label === "Técnico Asignado" ? (
                         <>
                           {isEditing[equipment._id] ? (
-                            <IonLabel position="floating">{field.label}:</IonLabel>
+                            <>
+                              <IonLabel position="floating">{field.label}:</IonLabel>
+                              <IonSelect
+                                value={
+                                  editingEquipment[`${equipment._id}-${field.field}`] ??
+                                  equipment.assignedTechnician ??
+                                  ""
+                                }
+                                onIonChange={(e) =>
+                                  handleInputChange(equipment._id, field.field!, e.detail.value)
+                                }
+                              >
+                                <IonSelectOption value="">Seleccionar técnico</IonSelectOption>
+                                {technicians.map((tech) => (
+                                  <IonSelectOption key={tech._id} value={tech.name}>
+                                    {tech.name}
+                                  </IonSelectOption>
+                                ))}
+                              </IonSelect>
+                            </>
                           ) : (
+                            <>
+                              <strong className="ion-hide-sm-up">{field.label}: </strong>
+                              <IonText>{field.value}</IonText>
+                            </>
+                          )}
+                        </>)
+                        : field.label === "Fecha de Autorización" && isEditing[equipment._id] || field.label === "Fecha de Entrega al Cliente" && isEditing[equipment._id] ? (
+                          <>
                             <strong className="ion-hide-sm-up">{field.label}: </strong>
-                          )}
-                          {isEditing[equipment._id] ? (
-                            field.label === "Ficha Técnica" || field.label === "Diagnóstico" ? (
-                              <IonTextarea
-                                value={
-                                  editingEquipment[`${equipment._id}-${field.field}`] ?? field.value?.toString() ?? ""
-                                }
-                                onIonInput={(e) =>
-                                  handleInputChange(equipment._id, field.field!, e.detail.value ?? "")
-                                }
-                                className="custom-input"
-                              />
-                            ) : (
-                              <IonInput
-                                value={
-                                  editingEquipment[`${equipment._id}-${field.field!}`] ?? field.value?.toString() ?? ""
-                                }
-                                onIonInput={(e) =>
-                                  handleInputChange(equipment._id, field.field!, e.detail.value ?? "")
-                                }
-                                className="custom-input"
-                              />
-                            )
-                          ) : (
                             <IonText>{field.value?.toString() ?? "No disponible"}</IonText>
-                          )}
-                        </>
-                      )}
+                          </>
+                        ) : (
+                          <>
+                            {isEditing[equipment._id] ? (
+                              <IonLabel position="floating">{field.label}:</IonLabel>
+                            ) : (
+                              <strong className="ion-hide-sm-up">{field.label}: </strong>
+                            )}
+                            {isEditing[equipment._id] ? (
+                              field.label === "Ficha Técnica" || field.label === "Diagnóstico" ? (
+                                <IonTextarea
+                                  value={
+                                    editingEquipment[`${equipment._id}-${field.field}`] ?? field.value?.toString() ?? ""
+                                  }
+                                  onIonInput={(e) =>
+                                    handleInputChange(equipment._id, field.field!, e.detail.value ?? "")
+                                  }
+                                  className="custom-input"
+                                />
+                              ) : (
+                                <IonInput
+                                  value={
+                                    editingEquipment[`${equipment._id}-${field.field!}`] ?? field.value?.toString() ?? ""
+                                  }
+                                  onIonInput={(e) =>
+                                    handleInputChange(equipment._id, field.field!, e.detail.value ?? "")
+                                  }
+                                  className="custom-input"
+                                />
+                              )
+                            ) : (
+                              <IonText>{field.value?.toString() ?? "No disponible"}</IonText>
+                            )}
+                          </>
+                        )}
                     </IonCol>
                   ))}
 
@@ -611,7 +650,7 @@ export default function Report(props: any) {
                       )}
 
 
-                      {isTechnician &&
+                      {(isTechnician || isAdministrator) &&
                         <IonButton
                           color="secondary"
                           onClick={() =>

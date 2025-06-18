@@ -1,6 +1,7 @@
 import axios from "axios";
 
 export const API_URL = `${import.meta.env.VITE_API_URL_TEST}/equipment`;
+export const API_URL_TECH = `${import.meta.env.VITE_API_URL_TEST}/auth`;
 
 export const getEquipment = async (
   technicianName?: string,
@@ -82,6 +83,17 @@ export const updateCustomerApproval = async (
     return response.data;
   } catch (error) {
     console.error("Error al actualizar aprobación del cliente:", error);
+    throw error;
+  }
+};
+
+// Obtener la lista de técnicos
+export const getTechnicians = async () => {
+  try {
+    const response = await axios.get(`${API_URL_TECH}/technicians`);
+    return response.data;
+  } catch (error) {
+    console.error("Error al obtener técnicos:", error);
     throw error;
   }
 };
